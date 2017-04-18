@@ -1,0 +1,25 @@
+{
+  "name": "docker_web_app",
+  "version": "1.0.0",
+  "description": "Node.js on Docker",
+  "author": "First Last <first.last@example.com>",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thinegan/my_package.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thinegan/my_package/issues"
+  }, 
+ "dependencies": {
+    "express": "^4.13.3",
+    "minimatch": "^3.0.2",
+    "graceful-fs": "^4.0.0"
+  }
+}

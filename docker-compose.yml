@@ -1,0 +1,23 @@
+version: "2.1"
+# Example of spinning 3 nodejs containers
+services:
+  node1:
+    image: thinegan/debian-nodejs-node1
+    container_name: debian-nodejs-node1
+    build: .
+    ports:
+      - "50000:8080"
+
+  node2:
+    image: thinegan/debian-nodejs-node2
+    container_name: debian-nodejs-node2
+    build: .
+    ports:
+      - "50001:8080"
+
+  node3:
+    image: thinegan/debian-nodejs-node3
+    container_name: debian-nodejs-node3
+    build: .
+    ports:
+      - "50002:8080"

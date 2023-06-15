@@ -29,13 +29,13 @@ steps:
     dockerfile: Dockerfile
     disable_push: true
 
-  push:
-    stage: "prepare"
-    title: "Pushing Docker image to Docker hub"
-    type: push
-    image_name: "thinegan/debian-nodejs"
-    tag: "latest"
-    registry: mydockerhub1
-    candidate: ${{build}}
+  # push:
+  #   stage: "prepare"
+  #   title: "Pushing Docker image to Docker hub"
+  #   type: push
+  #   image_name: "thinegan/debian-nodejs"
+  #   tag: "latest"
+  #   registry: mydockerhub1
+  #   candidate: ${{build}}
 
 

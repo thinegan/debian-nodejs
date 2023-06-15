@@ -1,8 +1,8 @@
-FROM debian:jessie
+FROM debian:bullseye
 MAINTAINER Thinegan Ratnam <thinegan@thinegan.com>
 
 RUN apt-get update && apt-get install -y curl sudo
-RUN curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 RUN apt-get update && apt-get install -y supervisor nodejs build-essential
 RUN curl https://www.npmjs.com/install.sh | sh
 RUN mkdir -p /var/nodejs/

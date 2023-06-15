@@ -5,7 +5,7 @@ Dockerized Nodejs service, built on top of official [Debian](https://hub.docker.
 * thinegan/debian-nodejs:jessie (Debian GNU/Linux 8)
 
 # Installed packages
-* [8.7, 8, jessie, latest (jessie/Dockerfile)](https://github.com/tianon/docker-brew-debian/blob/e8131d071a42b8e88cabbb0aa33023c7b66b7b93/jessie/Dockerfile)
+* [11, bullseye, latest (bullseye/docker/Dockerfile)]
 
 # Image specific:
 * supervisor

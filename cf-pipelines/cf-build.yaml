@@ -1,0 +1,41 @@
+# More examples of Codefresh YAML can be found at
+# https://codefresh.io/docs/docs/yaml-examples/examples/
+
+version: "1.0"
+stages:
+  - prepare
+  - build
+  - scan
+  - test
+  - release
+
+steps:
+  clone:
+    stage: "prepare"
+    title: "Cloning repository"
+    type: "git-clone"
+    repo: "thinegan/debian-nodejs"
+    revision: "${{CF_BRANCH}}"
+    depth: 1
+    git: "git-thinegan-cf"
+
+  build:
+    stage: "prepare"
+    title: "Building Docker image"
+    type: "build"
+    image_name: "thinegan/debian-nodejs"
+    working_directory: "${{clone}}/docker"
+    tag: "latest"
+    dockerfile: Dockerfile
+    disable_push: true
+
+  push:
+    stage: "prepare"
+    title: "Pushing Docker image to Docker hub"
+    type: push
+    image_name: "thinegan/debian-nodejs"
+    tag: "latest"
+    registry: mydockerhub1
+    candidate: ${{build}}
+
+

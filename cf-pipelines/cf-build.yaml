@@ -19,13 +19,23 @@ steps:
     depth: 1
     git: "git-thinegan-cf"
 
+  ReleaseVariables:
+    stage: "prepare"
+    image: anthonyzou/alpine-build-essentials:latest
+    working_directory: "${{clone}}"
+    commands:
+      - cf_export RELEASE_IMAGE_TAG="${{CF_SHORT_REVISION}}"
+      - cf_export RELEASE_DISTRO_TAG="debian-bullseye"
+      - cf_export ECR_IMAGE_REPO=thinegan/debian-nodejs
+      - cf_export APP_NAME=debian-nodejs
+
   build:
     stage: "prepare"
     title: "Building Docker image"
     type: "build"
-    image_name: "thinegan/debian-nodejs"
+    image_name: "${{ECR_IMAGE_REPO}}"
     working_directory: "${{clone}}/docker"
-    tag: "latest"
+    tags: [ 'latest', '${{RELEASE_DISTRO_TAG}}', '${{RELEASE_IMAGE_TAG}}']
     dockerfile: Dockerfile
     disable_push: true
 
@@ -33,9 +43,33 @@ steps:
     stage: "prepare"
     title: "Pushing Docker image to Docker hub"
     type: push
-    image_name: "thinegan/debian-nodejs"
-    tag: "latest"
+    image_name: "${{ECR_IMAGE_REPO}}"
+    tags: [ 'latest', '${{RELEASE_DISTRO_TAG}}', '${{RELEASE_IMAGE_TAG}}']
     registry: mydockerhub1
     candidate: ${{build}}
 
+  MySnykContainer:
+    stage: "prepare"
+    title: Snyk Container Vulnerable Check
+    image: snyk/snyk:docker
+    working_directory: "${{clone}}/docker"
+    fail_fast: false
+    environment:
+      - SNYK_TOKEN=${{SNYK_AUTH_TOKEN}}
+      - SNYK_ORG=${{SNYK_ORG_NAME}}
+      - SNYK_API_ENDPOINT="https://snyk.io/"
+    commands:
+      - snyk auth $SNYK_TOKEN
+      - snyk container monitor --project-name=${{ECR_IMAGE_REPO}} --severity-threshold=high --file=Dockerfile ${{ECR_IMAGE_REPO}}:${{RELEASE_IMAGE_TAG}}  --exclude-app-vulns
+      - snyk container test --severity-threshold=high --file=Dockerfile ${{ECR_IMAGE_REPO}}:${{RELEASE_IMAGE_TAG}}  --exclude-app-vulns
+    on_success:
+      metadata:
+        set:
+          - '${{build.imageId}}':
+            - CF_QUALITY: true
+    on_fail:
+      metadata:
+        set:
+          - '${{build.imageId}}':
+            - CF_QUALITY: false
 # Debug mode 1
